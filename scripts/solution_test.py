@@ -4,10 +4,9 @@ import os
 import io
 solution = __import__("solution")
 
+
 class SolutionTestCase(unittest.TestCase):
     def test_sample_data(self):
-        solution.main()
-
         path = "."
 
         for item in os.scandir(path):
