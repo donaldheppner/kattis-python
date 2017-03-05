@@ -12,7 +12,7 @@ def main():
 
 
 def solve(input, output):
-    output.write("hello!")
+    output.write(input.readline().split(" ")[1])
 
 
 if __name__ == '__main__':

@@ -50,5 +50,9 @@ else:
     # delete sample zip
     os.remove(data_zip)
 
+    # create submit.bat
+    submit_bat = os.path.join(problem_path, "submit.bat")
+    with open(submit_bat, 'w') as submit_file:
+        submit_file.write("python ..\..\scripts\submit.py solution.py -p " + problem_name + " -f")
 
 # launch IDE
