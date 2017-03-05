@@ -1,7 +1,7 @@
 import unittest
 import sys
 import os
-#__import__("..\\scripts\\solution.py")
+__import__("solution.py")
 
 class SolutionTestCase(unittest.TestCase):
     def test_sampledata(self):

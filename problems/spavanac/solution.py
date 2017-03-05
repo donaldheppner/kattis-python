@@ -1,8 +1,7 @@
 import os
 import sys
 
-def main(args = None):
-
+print("WEEEEE!")
 # for item in os.scandir(path):
 #     if item.name.endswith(".in"):
 #         in_path = os.path.join(path, item.name)
