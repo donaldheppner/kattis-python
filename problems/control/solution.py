@@ -15,38 +15,38 @@ def solve(input, output):
     number_of_recipes = int(input.readline())
 
     # create a list of sets for each recipe; skip the first number as it is the number of ingredients
-    recipes = list()
+    recipes = [None] * number_of_recipes
     for recipe_number in range(0, number_of_recipes):
-        recipes.append({map(int, input.readline().split()[1:])})
+        recipes[recipe_number] = frozenset(map(int, input.readline().split()[1:]))
 
-    recipe_count = 0
-    cauldrons = list() # mixed recipes
+    concocted_count = 0
+    ingredient_cauldrons = {}
     used_ingredients = set()
 
     for recipe in recipes:
-        if recipe not in used_ingredients:
-            cauldrons.append(recipe)    # record the cauldron
-            used_ingredients |= recipe  # note the used ingredients, union sets
-            recipe_count += 1
+        if len(recipe & used_ingredients) == 0: # recipe doesn't use any already used ingredients
+            for ingredient in recipe
+                ingredient_cauldrons[ingredient]
+            cauldrons.add(recipe)               # record the cauldron
+            used_ingredients |= recipe          # note the used ingredients, union sets
+            concocted_count += 1
         else: # can I combine cauldrons?
-            candidate_cauldrons = list()
+            candidate_cauldrons = set()
+            remaining_ingredients = recipe.copy()
             for cauldron in cauldrons:
-                remaining_ingredients = recipe.copy()
                 if cauldron <= recipe:
-                    candidate_cauldrons.append(cauldron)
+                    candidate_cauldrons.add(cauldron)
                     remaining_ingredients -= cauldron
-                    if remaining_ingredients not in used_ingredients:
+                    if len(remaining_ingredients & used_ingredients) == 0:
                         # success! mix the ingredients and record the new cauldron
                         used_ingredients |= remaining_ingredients
-                        new_cauldron = remaining_ingredients
                         for c in candidate_cauldrons:
-                            cauldrons.remove()
-                            new_cauldron |= c
-                        cauldrons.append(c)
-                        recipe_count += 1
+                            cauldrons.discard(c)
+                        cauldrons.add(recipe)
+                        concocted_count += 1
                         break
 
-    output.write("{}".format(recipe_count))
+    output.write("{}".format(concocted_count))
 
 
 if __name__ == '__main__':
