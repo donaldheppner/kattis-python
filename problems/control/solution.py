@@ -25,26 +25,30 @@ def solve(input, output):
 
     for recipe in recipes:
         if len(recipe & used_ingredients) == 0: # recipe doesn't use any already used ingredients
-            for ingredient in recipe
-                ingredient_cauldrons[ingredient]
-            cauldrons.add(recipe)               # record the cauldron
+            # index cauldrons by ingredient
+            for ingredient in recipe:
+                ingredient_cauldrons[ingredient] = recipe
             used_ingredients |= recipe          # note the used ingredients, union sets
             concocted_count += 1
         else: # can I combine cauldrons?
-            candidate_cauldrons = set()
-            remaining_ingredients = recipe.copy()
-            for cauldron in cauldrons:
-                if cauldron <= recipe:
-                    candidate_cauldrons.add(cauldron)
-                    remaining_ingredients -= cauldron
-                    if len(remaining_ingredients & used_ingredients) == 0:
-                        # success! mix the ingredients and record the new cauldron
-                        used_ingredients |= remaining_ingredients
-                        for c in candidate_cauldrons:
-                            cauldrons.discard(c)
-                        cauldrons.add(recipe)
-                        concocted_count += 1
-                        break
+            used_remaining_ingredients = recipe & used_ingredients
+            while len(used_remaining_ingredients) != 0:
+                # funky notation to get an item from a set
+                candidate_cauldron = ingredient_cauldrons[next(iter(used_remaining_ingredients))]
+                if candidate_cauldron <= recipe:
+                    used_remaining_ingredients -= candidate_cauldron
+                else:
+                    # can't make it work
+                    break
+            else:
+                # we did it!
+                concocted_count += 1
+                # update our list of used ingredients
+                used_ingredients |= recipe
+                # update our recipe:cauldron dictionary
+                for ingredient in recipe:
+                    ingredient_cauldrons[ingredient] = recipe
+
 
     output.write("{}".format(concocted_count))
 
