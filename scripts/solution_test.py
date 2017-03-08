@@ -17,10 +17,11 @@ class SolutionTestCase(unittest.TestCase):
                     # run the tests
                     with open(in_path, 'r') as input:
                         with open(answer_path, 'r') as expected:
+                            sys.stdout.write("Running test " + item.name)
                             actual = io.StringIO()
                             solution.solve(input, actual)
-                            self.assertEqual(actual.getvalue(), expected.read())
-                            sys.stdout.write("Test for " + item.name + " passed\n")
+                            self.assertEqual(expected.read().strip(), actual.getvalue().strip())
+                            sys.stdout.write(": passed\n")
 
 
 if __name__ == '__main__':
