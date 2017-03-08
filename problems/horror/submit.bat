@@ -1,0 +1,1 @@
+python ..\..\scripts\submit.py solution.py -p horror -f
