@@ -47,7 +47,6 @@ def solve(input, output):
         step = 1
         prob = probability(socks)
         step_function = increase_red if prob < ratio else increase_black
-        slow_walk = False
         while True:
             if prob == ratio:
                 output.write("{} {}\n".format(socks[0], socks[1]))
@@ -60,35 +59,25 @@ def solve(input, output):
             if prob < ratio:
                 if step_function == increase_black:
                     # overshot, back it up
-                    if step > 8:
+                    if step > 1:
                         socks[1] -= step
-                        step //= 2
-                    elif step > 1:
-                        socks[1] -= step
-                        step = 1
-                        slow_walk = True
+                        step //= 10
                     else:
                         # swap function
                         step_function = increase_red
-                        slow_walk = False
-                elif not slow_walk:
-                    step *= 2 # WAS 2
+                else:
+                    step *= 10
             else:
                 if step_function == increase_red:
                     # overshot, back it up
-                    if step > 8:
+                    if step > 1:
                         socks[0] -= step
-                        step //= 2
-                    elif step > 1:
-                        socks[0] -= step
-                        step = 1
-                        slow_walk = True
+                        step //= 10
                     else:
                         # swap function
                         step_function = increase_black
-                        slow_walk = False
-                elif not slow_walk:
-                    step *= 2 # WAS 2
+                else:
+                    step *= 10
 
             step_function(socks, step)
             prob = probability(socks)
