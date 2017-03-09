@@ -29,8 +29,6 @@ INCREASE_BLACK = 2
 
 
 def solve(input, output):
-    start_time = time.perf_counter()
-
     while True:
         p, q = map(int, input.readline().split())
         if p == 0 and q == 0:
@@ -46,26 +44,54 @@ def solve(input, output):
         ratio = p / q
         socks = [2, 1]  # must have a minimum of two red socks and 1 black sock
 
+        step = 1
+        prob = probability(socks)
+        step_function = increase_red if prob < ratio else increase_black
+        slow_walk = False
         while True:
-            prob = probability(socks)
             if prob == ratio:
                 output.write("{} {}\n".format(socks[0], socks[1]))
                 break
 
-            if socks[0] + socks[1] > 50000:
-                output.write("impossible")
+            if socks[0] + socks[1] > 50000 and step == 1:
+                output.write("impossible\n")
                 break
 
             if prob < ratio:
-                # switch to red
-                step_function = increase_red    # increase numerator
+                if step_function == increase_black:
+                    # overshot, back it up
+                    if step > 8:
+                        socks[1] -= step
+                        step //= 2
+                    elif step > 1:
+                        socks[1] -= step
+                        step = 1
+                        slow_walk = True
+                    else:
+                        # swap function
+                        step_function = increase_red
+                        slow_walk = False
+                elif not slow_walk:
+                    step *= 2 # WAS 2
             else:
-                # switched to black
-                step_function = increase_black  # increase denominator
+                if step_function == increase_red:
+                    # overshot, back it up
+                    if step > 8:
+                        socks[0] -= step
+                        step //= 2
+                    elif step > 1:
+                        socks[0] -= step
+                        step = 1
+                        slow_walk = True
+                    else:
+                        # swap function
+                        step_function = increase_black
+                        slow_walk = False
+                elif not slow_walk:
+                    step *= 2 # WAS 2
 
-            step_function(socks)
-
-    sys.stderr.write("Runtime: {}\n".format(time.perf_counter() - start_time))
+            step_function(socks, step)
+            prob = probability(socks)
 
 if __name__ == '__main__':
     main()

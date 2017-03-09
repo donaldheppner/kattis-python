@@ -2,6 +2,7 @@ import unittest
 import sys
 import os
 import io
+import time
 solution = __import__("solution")
 
 
@@ -18,10 +19,11 @@ class SolutionTestCase(unittest.TestCase):
                     with open(in_path, 'r') as input:
                         with open(answer_path, 'r') as expected:
                             sys.stdout.write("Running test " + item.name)
+                            start_time = time.perf_counter()
                             actual = io.StringIO()
                             solution.solve(input, actual)
                             self.assertEqual(expected.read().strip(), actual.getvalue().strip())
-                            sys.stdout.write(": passed\n")
+                            sys.stdout.write(": passed in {} seconds\n".format(time.perf_counter() - start_time))
 
 
 if __name__ == '__main__':
