@@ -1,6 +1,7 @@
 import sys
 import time
 
+
 def main():
     input = sys.stdin
     output = sys.stdout
@@ -11,21 +12,8 @@ def main():
     output.flush()
 
 
-def probability(socks):
-    return (socks[0] / (socks[0] + socks[1])) * ((socks[0] - 1) / (socks[0] + socks[1] - 1))
-
-
-def increase_red(socks, step=1):
-    socks[0] += step
-
-
-def increase_black(socks, step=1):
-    socks[1] += step
-
-
-NONE = 0
-INCREASE_RED = 1
-INCREASE_BLACK = 2
+def calc(red, total):
+    return (red * (red - 1)) / (total * (total - 1))
 
 
 def solve(input, output):
@@ -42,50 +30,23 @@ def solve(input, output):
 
         # initialized the test
         ratio = p / q
-        socks = [2, 1]  # must have a minimum of two red socks and 1 black sock
+        red = 2
+        total = 3
 
-        step = 1
-        accelerator = 128
-        prob = probability(socks)
-        step_function = increase_red if prob < ratio else increase_black
         while True:
-            if prob == ratio:
-                output.write("{} {}\n".format(socks[0], socks[1]))
+            prob = calc(red, total)
+            if prob < ratio:
+                red += 1
+            elif prob > ratio:
+                total += 1
+            else:
+                output.write("{} {}\n".format(red, total - red))
                 break
 
-            if socks[0] + socks[1] > 50000 and step == 1:
+            if total > 50000:
                 output.write("impossible\n")
                 break
 
-            if prob < ratio:
-                if step_function == increase_black:
-                    # overshot, back it up
-                    if step > 1:
-                        socks[1] -= step
-                        step //= accelerator
-                    else:
-                        # swap function
-                        step_function = increase_red
-                        if accelerator > 1:
-                            accelerator //= 2
-                else:
-                    step *= accelerator
-            else:
-                if step_function == increase_red:
-                    # overshot, back it up
-                    if step > 1:
-                        socks[0] -= step
-                        step //= accelerator
-                    else:
-                        # swap function
-                        step_function = increase_black
-                        if accelerator > 1:
-                            accelerator //= 2
-                else:
-                    step *= accelerator
-
-            step_function(socks, step)
-            prob = probability(socks)
 
 if __name__ == '__main__':
     main()
