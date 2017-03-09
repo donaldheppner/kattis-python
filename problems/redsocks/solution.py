@@ -33,19 +33,19 @@ def solve(input, output):
         red = 2
         total = 3
 
-        while True:
+        while total <= 50000:
             prob = calc(red, total)
             if prob < ratio:
                 red += 1
+                total += 1
             elif prob > ratio:
                 total += 1
             else:
                 output.write("{} {}\n".format(red, total - red))
                 break
 
-            if total > 50000:
-                output.write("impossible\n")
-                break
+        else:
+            output.write("impossible\n")
 
 
 if __name__ == '__main__':
