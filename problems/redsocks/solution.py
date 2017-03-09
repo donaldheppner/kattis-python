@@ -45,6 +45,7 @@ def solve(input, output):
         socks = [2, 1]  # must have a minimum of two red socks and 1 black sock
 
         step = 1
+        accelerator = 128
         prob = probability(socks)
         step_function = increase_red if prob < ratio else increase_black
         while True:
@@ -61,23 +62,27 @@ def solve(input, output):
                     # overshot, back it up
                     if step > 1:
                         socks[1] -= step
-                        step //= 10
+                        step //= accelerator
                     else:
                         # swap function
                         step_function = increase_red
+                        if accelerator > 1:
+                            accelerator //= 2
                 else:
-                    step *= 10
+                    step *= accelerator
             else:
                 if step_function == increase_red:
                     # overshot, back it up
                     if step > 1:
                         socks[0] -= step
-                        step //= 10
+                        step //= accelerator
                     else:
                         # swap function
                         step_function = increase_black
+                        if accelerator > 1:
+                            accelerator //= 2
                 else:
-                    step *= 10
+                    step *= accelerator
 
             step_function(socks, step)
             prob = probability(socks)
