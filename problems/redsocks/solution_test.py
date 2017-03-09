@@ -22,7 +22,9 @@ class SolutionTestCase(unittest.TestCase):
                             start_time = time.perf_counter()
                             actual = io.StringIO()
                             solution.solve(input, actual)
-                            self.assertEqual(expected.read().strip(), actual.getvalue().strip())
+                            expected_string = expected.read().strip()
+                            actual_string = actual.getvalue().strip()
+                            self.assertEqual(expected_string, actual_string)
                             sys.stdout.write(": passed in {} seconds\n".format(time.perf_counter() - start_time))
 
 

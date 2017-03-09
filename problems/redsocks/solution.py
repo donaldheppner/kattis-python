@@ -33,17 +33,17 @@ def solve(input, output):
         red = 2
         total = 3
 
-        while total <= 50000:
-            prob = calc(red, total)
-            if prob < ratio:
-                red += 1
-                total += 1
-            elif prob > ratio:
-                total += 1
+        # find the total value
+        while (not (ratio * ((total * total) - total)).is_integer()) and total <= 49998:
+            total += 1
+
+        # find the red value
+        if total <= 49998:
+            reds_squared_minus_red = ratio * ((total * total) - total)
+            while (red * red) - red < reds_squared_minus_red:
+                red += 1 # TODO: if red > total - 2, recompute total
             else:
                 output.write("{} {}\n".format(red, total - red))
-                break
-
         else:
             output.write("impossible\n")
 
