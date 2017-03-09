@@ -1,5 +1,4 @@
 import sys
-import time
 
 
 def main():
@@ -13,7 +12,7 @@ def main():
 
 
 def calc(red, total):
-    return (red * (red - 1)) / (total * (total - 1))
+    return 1 if total - red == 0 else (red * (red - 1)) / (total * (total - 1))
 
 
 def solve(input, output):
@@ -33,19 +32,29 @@ def solve(input, output):
         red = 2
         total = 3
 
-        # find the total value
-        while (not (ratio * ((total * total) - total)).is_integer()) and total <= 49998:
+        while True:
+            # find the next possible total value
             total += 1
 
-        # find the red value
-        if total <= 49998:
-            reds_squared_minus_red = ratio * ((total * total) - total)
-            while (red * red) - red < reds_squared_minus_red:
-                red += 1 # TODO: if red > total - 2, recompute total
+            # find the red value
+            if total <= 49998:
+                reds_squared_minus_red = ratio * ((total * total) - total)
+                while (red * red) - red < reds_squared_minus_red:
+                    red += 1
+                else:
+                    prob = calc(red, total)
+                    if prob == ratio:
+                        output.write("{} {}\n".format(red, total - red))
+                        break
+                    elif prob < ratio:
+                        red += 1
+                        total += 1
+                    else:
+                        total += 1
             else:
-                output.write("{} {}\n".format(red, total - red))
-        else:
-            output.write("impossible\n")
+                output.write("impossible\n")
+                break
+
 
 
 if __name__ == '__main__':
