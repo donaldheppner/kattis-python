@@ -12,6 +12,10 @@ def main():
 
 
 def calculate_row(row):
+
+    # remove all the zeros
+    row = [x for x in row if x != 0]
+
     i = 0
     while i < len(row):
         if row[i] == 0:
@@ -28,42 +32,46 @@ def calculate_row(row):
     while len(row) < 4:
         row.append(0)
 
+    return row
+
 
 def solve(input, output):
     grid = []
     for i in range(0, 4):
-        grid.append([map(int, input.readline().split())])
+        row = [x for x in map(int, input.readline().split())]
+        grid.append(row)
 
     direction = int(input.readline())
 
     if direction == 0:
         # left
-        for row in grid:
-            calculate_row(row)
+        for i in range(0, 4):
+            grid[i] = calculate_row(grid[i])
 
     elif direction == 1:
         # up
         for i in range(0, 4):
-            row = [grid[i][x] for x in range(0, 4)]
-            calculate_row(row)
+            row = [grid[x][i] for x in range(0, 4)]
+            row = calculate_row(row)
             for x in range(0, 4):
-                grid[i][x] = row[x]
+                grid[x][i] = row[x]
 
     elif direction == 2:
         # right
-        for row in grid:
+        for i in range(0, 4):
+            grid[i].reverse()
+            row = calculate_row(grid[i])
             row.reverse()
-            calculate_row(row)
-            row.reverse()
+            grid[i] = row
     elif direction == 3:
         # down
         for i in range(0, 4):
-            row = [grid[i][x] for x in range(0, 4)]
+            row = [grid[x][i] for x in range(0, 4)]
             row.reverse()
-            calculate_row(row)
+            row = calculate_row(row)
             row.reverse()
-            for x in range(3, 1):
-                grid[i][x] = row[x]
+            for x in range(0, 4):
+                grid[x][i] = row[x]
 
     for row in grid:
         output.write(" ".join(map(str, row)))
