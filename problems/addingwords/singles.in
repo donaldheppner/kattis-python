@@ -1,0 +1,7 @@
+def foo 1
+def bar 2
+def car 0
+calc foo =
+calc foo + foo =
+calc foo + car - car =
+calc foo - foo =

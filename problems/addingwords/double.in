@@ -1,0 +1,4 @@
+def foo 3
+def foo 1
+def bar 2
+calc foo + bar =
