@@ -14,10 +14,14 @@ def main():
 class Junction:
     def __init__(self, args):
         self.connected_junctions = set()
-        self.x = args[0]
-        self.y = args[1]
-        self.z = args[2]
-        self.holes = args[3]
+        self.number = args[0]
+        self.x = args[1]
+        self.y = args[2]
+        self.z = args[3]
+        self.holes = args[4]
+
+    def __repr__(self):
+        return str(self.number)
 
     def add_pipe(self, j):
         self.connected_junctions.add(j)
@@ -86,7 +90,7 @@ def find_min_cost(current, target, all, path=[]):
                 # calculate costs
                 new_path = path.copy()
                 new_path.append(next_junction)
-                costs.append(calculate_cost(path))
+                costs.append(calculate_cost(new_path))
 
             else:
                 new_path = path.copy()
@@ -107,7 +111,8 @@ def solve(input, output):
         (number_of_junctions, number_of_pipes) = map(int, line.split())
         junctions = {}
         for i in range(1, number_of_junctions + 1):
-            j = tuple(x for x in map(int, input.readline().split()))
+            j = [x for x in map(int, input.readline().split())]
+            j.insert(0, i)
             junctions[i] = Junction(j)
 
         for i in range(0, number_of_pipes):
