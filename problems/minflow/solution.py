@@ -30,12 +30,14 @@ class Junction:
     def distance(self, j):
         return (((self.x - j.x) ** 2) + ((self.y - j.y) ** 2) + ((self.z - j.z) ** 2)) ** .5
 
-    def can_connect(self, j, used_holes=0):
+    def can_connect(self, j, path):
+        used_holes = 0 if len(path) == 0 else self.used_holes(path[-1])
+
         return j in self.connected_junctions or (self.holes - used_holes > 0 and j.holes > 0)
 
     # how many holes are used by connecting from self to junction; could be 0 of existing pipes
     def used_holes(self, j):
-        return 0 if j in self.connected_junctions else 1
+        return 0 if j == self or j in self.connected_junctions else 1
 
     def requires_pipe(self, j):
         return not (j in self.connected_junctions or j == self)
@@ -81,21 +83,22 @@ def add_downhill_junctions(junction, path, max_z, downhill_junctions):
         add_downhill_junctions(connected_junction, path, max_z, downhill_junctions)
 
 
-def find_min_cost(current, target, all, path=[]):
-    costs = [2 ** 32]
-    for next_junction in [x for x in all if x != current and x not in path]:
-        # can I connect? used holes calculated based on what it cost current to connect to the previous node
-        if current.can_connect(next_junction, 0 if len(path) == 0 else current.used_holes(path[-1])):
-            if next_junction == target:
-                # calculate costs
-                new_path = path.copy()
-                new_path.append(next_junction)
-                costs.append(calculate_cost(new_path))
+def print_path(path, cost):
+    sys.stderr.write(" ".join([str(x.number) for x in path]))
+    sys.stderr.write(": {}\n".format(cost))
 
-            else:
-                new_path = path.copy()
-                new_path.append(current)
-                costs.append(find_min_cost(next_junction, target, all, new_path))
+
+def find_min_cost(current, target, all, path=[]):
+
+    path.append(current)
+    if current == target:
+        cost = calculate_cost(path)
+        print_path(path, cost)
+        return cost
+
+    costs = [2 ** 32]
+    for next_junction in [x for x in all if x not in path and current.can_connect(x, path)]:
+        costs.append(find_min_cost(next_junction, target, all, path.copy()))
 
     return min(costs)
 
@@ -119,7 +122,7 @@ def solve(input, output):
             (j1, j2) = map(int, input.readline().split())
             junctions[j1].add_pipe(junctions[j2])
 
-        min_cost = find_min_cost(junctions[1], junctions[number_of_junctions], junctions.values())
+        min_cost = find_min_cost(junctions[1], junctions[number_of_junctions], [x for x in junctions.values()])
 
         output.write("Case {}: ".format(case))
         if min_cost == 2 ** 32:
