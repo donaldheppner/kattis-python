@@ -27,6 +27,9 @@ class Junction:
         self.connected_junctions.add(j)
         j.connected_junctions.add(self)
 
+    def distance_cost(self, j):
+        return 0 if j in self.connected_junctions else self.distance(j)
+
     def distance(self, j):
         return (((self.x - j.x) ** 2) + ((self.y - j.y) ** 2) + ((self.z - j.z) ** 2)) ** .5
 
@@ -59,7 +62,7 @@ def calculate_cost(path):
 
     distance_cost = 0
     for i in range(0, len(path) - 1):
-        distance_cost += path[i].distance(path[i + 1])
+        distance_cost += path[i].distance_cost(path[i + 1])
 
     return hole_cost + distance_cost + calculate_downhill_cost(path)
 
@@ -73,7 +76,7 @@ def calculate_downhill_cost(path):
         for connected_junction in [x for x in junction.connected_junctions if x not in path and x.z <= max_z]:
             add_downhill_junctions(connected_junction, path, max_z, downhill_junctions)
 
-    return sum(x.holes for x in downhill_junctions)
+    return sum(x.holes for x in downhill_junctions) * 0.5
 
 
 def add_downhill_junctions(junction, path, max_z, downhill_junctions):
