@@ -91,8 +91,7 @@ def print_path(path, cost):
     sys.stderr.write(": {}\n".format(cost))
 
 
-def find_min_cost(current, target, all, path=[]):
-
+def find_min_cost(current, target, all, path):
     path.append(current)
     if current == target:
         cost = calculate_cost(path)
@@ -125,7 +124,7 @@ def solve(input, output):
             (j1, j2) = map(int, input.readline().split())
             junctions[j1].add_pipe(junctions[j2])
 
-        min_cost = find_min_cost(junctions[1], junctions[number_of_junctions], [x for x in junctions.values()])
+        min_cost = find_min_cost(junctions[1], junctions[number_of_junctions], [x for x in junctions.values()], [])
 
         output.write("Case {}: ".format(case))
         if min_cost == 2 ** 32:
