@@ -121,15 +121,34 @@ def solve(input, output):
             break
 
         (number_of_junctions, number_of_pipes) = map(int, line.split())
-        junctions = {}
-        for i in range(1, number_of_junctions + 1):
+        junctions = []
+        pipes = {}
+        for i in range(0, number_of_junctions):
             j = [x for x in map(int, input.readline().split())]
-            j.insert(0, i)
+            j.insert(0, i)  # store junction number
             junctions[i] = Junction(j)
 
         for i in range(0, number_of_pipes):
             (j1, j2) = map(int, input.readline().split())
-            junctions[j1].add_pipe(junctions[j2])
+            pipes.add(j1 - 1, j2 - 1)
+            pipes.add(j2 - 1, j1 - 1)
+
+        costs = [2 ** 32]
+        j_stack = [junctions[0]]
+        while len(j_stack) != 0:
+            last_juction = j_stack[-1]
+            if last_juction.number < number_of_junctions:
+                j_stack.append(junctions[last_juction.number + 1])
+                continue
+            else:
+                # calculate
+
+
+
+
+
+
+
 
         min_cost = find_min_cost(junctions[1], junctions[number_of_junctions], [x for x in junctions.values()], [])
 
