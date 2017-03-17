@@ -34,7 +34,14 @@ class Junction:
         return (((self.x - j.x) ** 2) + ((self.y - j.y) ** 2) + ((self.z - j.z) ** 2)) ** .5
 
     def can_connect(self, j, path):
-        used_holes = 0 if len(path) == 0 else self.used_holes(path[-1])
+        used_holes = 0
+
+        try:
+            self_index = path.index(self)
+            if self_index > 0:
+                used_holes = 0 if path[self_index - 1] in self.connected_junctions else 1
+        except ValueError:
+            used_holes = 0
 
         return j in self.connected_junctions or (self.holes - used_holes > 0 and j.holes > 0)
 
