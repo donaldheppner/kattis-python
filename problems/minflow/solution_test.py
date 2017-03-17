@@ -23,8 +23,8 @@ class SolutionTestCase(unittest.TestCase):
                             expected_string = expected.read().strip()
                             actual_string = actual.getvalue().strip()
                             self.assertEqual(expected_string, actual_string)
-                            sys.stderr.write("Test {} passed\n".format(item.name))
-
+                            sys.stderr.write(actual_string)
+                            sys.stderr.write("\nTest {}: passed\n".format(item.name))
 
 if __name__ == '__main__':
     unittest.main()
