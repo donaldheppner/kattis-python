@@ -134,14 +134,16 @@ def solve(input, output):
             pipes.add(j2 - 1, j1 - 1)
 
         costs = [2 ** 32]
-        j_stack = [junctions[0]]
+        j_stack = [0]
         while len(j_stack) != 0:
-            last_juction = j_stack[-1]
-            if last_juction.number < number_of_junctions:
-                j_stack.append(junctions[last_juction.number + 1])
-                continue
-            else:
-                # calculate
+            if j_stack[-1] == number_of_junctions - 1:
+                # calc
+                last = j_stack.pop()
+                j_stack.
+
+
+
+            j_stack.append(junctions)
 
 
 
