@@ -50,13 +50,19 @@ def solve(input, output):
         else:
             first_ingredient_pairs = bad_pair_lookup[pair_list[0]]
             second_ingredient_pairs = bad_pair_lookup[pair_list[1]]
-            overlap = len(first_ingredient_pairs) + len(second_ingredient_pairs)
 
-            possible_pizzas_to_remove = all_combinations(number_ingredients - 2 - overlap)
-            if overlap == 0:
+            first_ingredient_overlap = len(first_ingredient_pairs)
+            second_ingredient_overlap = len(second_ingredient_pairs)
+            total_overlap = first_ingredient_overlap + second_ingredient_overlap
+
+            # todo: crush both by the sum of the overlap, but then calculate both
+            possible_pizzas_to_remove = all_combinations(number_ingredients - 2 - total_overlap)n 
+            #possible_pizzas_to_remove += all_combinations(number_ingredients - 2 - total_overlap)
+            if total_overlap == 0:
                 possible_pizzas_to_remove -= sum(all_combinations(number_ingredients - 4 - x) for x in range(0, removed_pairs + 1))
 
-            pizzas_to_remove += max(1, possible_pizzas_to_remove)
+            pizzas_to_remove += possible_pizzas_to_remove
+            #pizzas_to_remove += max(1, possible_pizzas_to_remove)
 
         bad_pair_lookup[pair_list[0]].add(pair_list[1])
         bad_pair_lookup[pair_list[1]].add(pair_list[0])
